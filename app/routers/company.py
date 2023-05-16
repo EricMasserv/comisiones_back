@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from fastapi import HTTPException
-from ..Models.Company import Company
+from ..Models.Compañia import Company
 from ..Schemas.CompanyCreateModel import CompanyCreateRequestModel, CompanyResponseModel
 from ..Schemas.CompanyUpdateModel import CompanyUpdateRequestModel, CompanyUpdateResponseModel
 
@@ -12,32 +12,31 @@ company_router = APIRouter(
 @company_router.post('/create')
 async def create_company(company_request: CompanyCreateRequestModel):
     company = Company.create(
-        user_id=company_request.user_id,
-        legal_name=company_request.legal_name,
-        company_name=company_request.company_name,
-        tax_regime_id=company_request.tax_regime_id,
-        email=company_request.email,
-        contact_name=company_request.contact_name,
-        contact_email=company_request.contact_email,
-        phone=company_request.phone,
-        comision_percentage=company_request.comision_percentage,
-        comision_fixed=company_request.comision_fixed,
-        payment_type=company_request.payment_type,
-        claim_payment_max_days=company_request.claim_payment_max_days,
-        pay_day=company_request.pay_day,
-        cutoff_date=company_request.cutoff_date,
-        is_active=company_request.is_active,
-        bank_name=company_request.bank_name,
-        bank_account_number=company_request.bank_account_number,
-        bank_account_clabe=company_request.bank_account_clabe,
-        bank_swift=company_request.bank_swift,
-        bank_iban=company_request.bank_iban,
-        bank_bic=company_request.bank_bic,
-        bank_address=company_request.bank_address,
-        currency_type=company_request.currency_type,
-        password=company_request.password,
-        legal_address=company_request.legal_address,
-        comercial_address=company_request.comercial_address,
+        nombre_legal=company_request.nombre_legal,
+        nombre_compania=company_request.nombre_compania,
+        regimen_fiscal_id=company_request.regimen_fiscal_id,
+        correo=company_request.correo,
+        contacto_nombre=company_request.contacto_nombre,
+        contacto_correo=company_request.contacto_correo,
+        telefono=company_request.telefono,
+        comision_porcentaje=company_request.comision_porcentaje,
+        comision_fija=company_request.comision_fija,
+        tipo_pago=company_request.tipo_pago,
+        dia_maximo_pago_reclamo=company_request.dia_maximo_pago_reclamo,
+        dia_pago=company_request.dia_pago,
+        fecha_corte=company_request.fecha_corte,
+        estatus=company_request.estatus,
+        banco_nombre=company_request.banco_nombre,
+        banco_numero_cuenta=company_request.banco_numero_cuenta,
+        banco_clabe_bancaria=company_request.banco_clabe_bancaria,
+        banco_codigo_swift=company_request.banco_codigo_swift,
+        banco_codigo_iban=company_request.banco_codigo_iban,
+        banco_codigo_bic=company_request.banco_codigo_bic,
+        banco_domicilio=company_request.banco_domicilio,
+        tipo_moneda=company_request.tipo_moneda,
+        contraseña=company_request.contraseña,
+        direccion_legal=company_request.direccion_legal,
+        direccion_comercial=company_request.direccion_comercial,
     )
     return company_request
 
@@ -46,39 +45,38 @@ async def get_company(company_id):
     company = Company.select().where(Company.id == company_id).first()
     if  company:
         return CompanyResponseModel(id=company.id,
-                                    user_id=company.user_id,
-                                    legal_name=company.legal_name,
-                                    company_name=company.company_name,
-                                    tax_regime_id=company.tax_regime_id,
-                                    email=company.email,
-                                    contact_name=company.contact_name,
-                                    contact_email=company.contact_email,
-                                    phone=company.phone,
-                                    comision_percentage=company.comision_percentage,
-                                    comision_fixed=company.comision_fixed,
-                                    payment_type=company.payment_type,
-                                    claim_payment_max_days=company.claim_payment_max_days,
-                                    pay_day=company.pay_day,
-                                    cutoff_date=company.cutoff_date,
-                                    is_active=company.is_active,
-                                    bank_name=company.bank_name,
-                                    bank_account_number=company.bank_account_number,
-                                    bank_account_clabe=company.bank_account_clabe,
-                                    bank_swift=company.bank_swift,
-                                    bank_iban=company.bank_iban,
-                                    bank_bic=company.bank_bic,
-                                    bank_address=company.bank_address,
-                                    currency_type=company.currency_type,
-                                    password=company.password,
-                                    legal_address=company.legal_address,
-                                    comercial_address=company.comercial_address,
+                                    nombre_legal=company.nombre_legal,
+                                    nombre_compania=company.nombre_compania,
+                                    regimen_fiscal_id=company.regimen_fiscal_id,
+                                    correo=company.correo,
+                                    contacto_nombre=company.contacto_nombre,
+                                    contacto_correo=company.contacto_correo,
+                                    telefono=company.telefono,
+                                    comision_porcentaje=company.comision_porcentaje,
+                                    comision_fija=company.comision_fija,
+                                    tipo_pago=company.tipo_pago,
+                                    dia_maximo_pago_reclamo=company.dia_maximo_pago_reclamo,
+                                    dia_pago=company.dia_pago,
+                                    fecha_corte=company.fecha_corte,
+                                    estatus=company.estatus,
+                                    banco_nombre=company.banco_nombre,
+                                    banco_numero_cuenta=company.banco_numero_cuenta,
+                                    banco_clabe_bancaria=company.banco_clabe_bancaria,
+                                    banco_codigo_swift=company.banco_codigo_swift,
+                                    banco_codigo_iban=company.banco_codigo_iban,
+                                    banco_codigo_bic=company.banco_codigo_bic,
+                                    banco_domicilio=company.banco_domicilio,
+                                    tipo_moneda=company.tipo_moneda,
+                                    contraseña=company.contraseña,
+                                    direccion_legal=company.direccion_legal,
+                                    direccion_comercial=company.direccion_comercial,
                                  )
     else:
         return HTTPException(404, 'Compañia no encontrada')
     
-@company_router.delete('/delete/{user_id}')
-async def delete_company(user_id):
-    company = Company.select().where(Company.id == user_id).first()
+@company_router.get('/delete/{division_id}')
+async def delete_company(division_id):
+    company = Company.select().where(Company.id == division_id).first()
     if  company:
         company.delete_instance()
         return {'Compañia eliminada'}
@@ -89,33 +87,34 @@ async def delete_company(user_id):
 async def update_company(company_request: CompanyUpdateRequestModel):
     company = Company.select().where(Company.id == company_request.id).first()
     if company:
-        company.user_id=company_request.user_id,
-        company.legal_name=company_request.legal_name,
-        company.company_name=company_request.company_name,
-        company.tax_regime_id=company_request.tax_regime_id,
-        company.email=company_request.email,
-        company.contact_name=company_request.contact_name,
-        company.contact_email=company_request.contact_email,
-        company.phone=company_request.phone,
-        company.comision_percentage=company_request.comision_percentage,
-        company.comision_fixed=company_request.comision_fixed,
-        company.payment_type=company_request.payment_type,
-        company.claim_payment_max_days=company_request.claim_payment_max_days,
-        company.pay_day=company_request.pay_day,
-        company.cutoff_date=company_request.cutoff_date,
-        company.is_active=company_request.is_active,
-        company.bank_name=company_request.bank_name,
-        company.bank_account_number=company_request.bank_account_number,
-        company.bank_account_clabe=company_request.bank_account_clabe,
-        company.bank_swift=company_request.bank_swift,
-        company.bank_iban=company_request.bank_iban,
-        company.bank_bic=company_request.bank_bic,
-        company.bank_address=company_request.bank_address,
-        company.currency_type=company_request.currency_type,
-        company.password=company_request.password,
-        company.legal_address=company_request.legal_address,
-        company.comercial_address=company_request.comercial_address,
-        company.save()
+        qry=Company.update({Company.nombre_legal:company_request.nombre_legal,
+                           Company.nombre_compania:company_request.nombre_compania,
+                           Company.regimen_fiscal_id:company_request.regimen_fiscal_id,
+                           Company.correo:company_request.correo,
+                           Company.contacto_nombre:company_request.contacto_nombre,
+                           Company.contacto_correo:company_request.contacto_correo,
+                           Company.telefono:company_request.telefono,
+                           Company.comision_porcentaje:company_request.comision_porcentaje,
+                           Company.comision_fija:company_request.comision_fija,
+                           Company.tipo_pago:company_request.tipo_pago,
+                           Company.dia_maximo_pago_reclamo:company_request.dia_maximo_pago_reclamo,
+                           Company.dia_pago:company_request.dia_pago,
+                           Company.fecha_corte:company_request.fecha_corte,
+                           Company.estatus:company_request.estatus,
+                           Company.banco_nombre:company_request.banco_nombre,
+                           Company.banco_numero_cuenta:company_request.banco_numero_cuenta,
+                           Company.banco_clabe_bancaria:company_request.banco_clabe_bancaria,
+                           Company.banco_codigo_swift:company_request.banco_codigo_swift,
+                           Company.banco_codigo_iban:company_request.banco_codigo_iban,
+                           Company.banco_codigo_bic:company_request.banco_codigo_bic,
+                           Company.banco_domicilio:company_request.banco_domicilio,
+                           Company.tipo_moneda:company_request.tipo_moneda,
+                           Company.contraseña:company_request.contraseña,
+                           Company.direccion_legal:company_request.direccion_legal,
+                           Company.direccion_comercial:company_request.direccion_comercial,
+                             }).where(Company.id == company_request.id)
+        qry.execute()
+        
         return {'Compañia actualizada'}
     else:
         return HTTPException(404, 'Compañia no encontrada')

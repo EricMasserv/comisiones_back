@@ -44,7 +44,7 @@ async def get_division(division_id):
     division = Division.select().where(Division.id == division_id).first()
     if  division:
         return DivisionResponseModel(id=division.id,
-                                    id_compañia=division.id_compañia,
+                                    id_compania=division.id_compania,
                                     nombre_division=division.nombre_division,
                                     regimen_fiscal_id=division.regimen_fiscal_id,
                                     rfc=division.rfc,
@@ -71,9 +71,9 @@ async def get_division(division_id):
     else:
         return HTTPException(404, 'Division no encontrada')
     
-@division_router.delete('/delete/{user_id}')
-async def delete_division(user_id):
-    division = Division.select().where(Division.id == user_id).first()
+@division_router.get('/delete/{division_id}')
+async def delete_division(division_id):
+    division = Division.select().where(Division.id == division_id).first()
     if  division:
         division.delete_instance()
         return {'Division eliminada'}
@@ -83,32 +83,34 @@ async def delete_division(user_id):
 @division_router.post('/update/')
 async def update_division(division_request: DivisionUpdateRequestModel):
     division = Division.select().where(Division.id == division_request.id).first()
-    if division:            
-        """ division.id_compania=division_request.id_compania, """
-        division.nombre_division=division_request.nombre_division,
-        """ division.regimen_fiscal_id=division_request.regimen_fiscal_id, """
-        division.rfc=division_request.rfc,
-        division.correo=division_request.correo,
-        division.telefono=division_request.telefono,
-        """ division.comision_porcentaje=division_request.comision_porcentaje, """
-        """ division.comision_fija=division_request.comision_fija, """
-        """ division.tipo_pago=division_request.tipo_pago, """
-        """ division.dia_maximo_pago_reclamo=division_request.dia_maximo_pago_reclamo, """
-        division.dia_pago=division_request.dia_pago,
-        division.fecha_corte=division_request.fecha_corte,
-        division.banco_nombre=division_request.banco_nombre,
-        """  division.banco_numero_cuenta=division_request.banco_numero_cuenta, """
-        """ division.banco_clabe_bancaria=division_request.banco_clabe_bancaria, """
-        """ division.banco_codigo_swift=division_request.banco_codigo_swift, """
-        """ division.banco_codigo_iban=division_request.banco_codigo_iban, """
-        """ division.banco_codigo_bic=division_request.banco_codigo_bic, """
-        division.banco_domicilio=division_request.banco_domicilio,
-        division.tipo_moneda=division_request.tipo_moneda,
-        division.contraseña=division_request.contraseña,
-        division.direccion=division_request.direccion,
-        division.estatus=division_request.estatus
-        division.save()       
-        
+    if division:     
+               
+        qry=Division.update({Division.id_compania:division_request.id_compania,
+                             Division.nombre_division:division_request.nombre_division,
+                             Division.regimen_fiscal_id:division_request.regimen_fiscal_id,
+                             Division.rfc:division_request.rfc,
+                             Division.correo:division_request.correo,
+                             Division.telefono:division_request.telefono,
+                             Division.comision_porcentaje:division_request.comision_porcentaje,
+                             Division.comision_fija:division_request.comision_fija,
+                             Division.tipo_pago:division_request.tipo_pago,
+                             Division.dia_maximo_pago_reclamo:division_request.dia_maximo_pago_reclamo,
+                             Division.dia_pago:division_request.dia_pago,
+                             Division.fecha_corte:division_request.fecha_corte,
+                             Division.banco_nombre:division_request.banco_nombre,
+                             Division.banco_numero_cuenta:division_request.banco_numero_cuenta,
+                             Division.banco_clabe_bancaria:division_request.banco_clabe_bancaria,
+                             Division.banco_codigo_swift:division_request.banco_codigo_swift,
+                             Division.banco_codigo_iban:division_request.banco_codigo_iban,
+                             Division.banco_codigo_bic:division_request.banco_codigo_bic,
+                             Division.banco_domicilio:division_request.banco_domicilio,
+                             Division.tipo_moneda:division_request.tipo_moneda,
+                             Division.contraseña:division_request.contraseña,
+                             Division.direccion:division_request.direccion,
+                             Division.estatus:division_request.estatus
+                             }).where(Division.id == division_request.id)
+        qry.execute()
+                   
         return {'Division actualizada'}
     else:
         return HTTPException(404, 'Division no encontrada')
