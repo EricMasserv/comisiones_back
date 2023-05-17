@@ -60,27 +60,14 @@ async def update_producto(producto_request: ProductoUpdateRequestModel):
     if producto:     
                
         qry=Producto.update({Producto.id_compania:producto_request.id_compania,
-                             Producto.nombre_division:producto_request.nombre_division,
-                             Producto.regimen_fiscal_id:producto_request.regimen_fiscal_id,
-                             Producto.rfc:producto_request.rfc,
-                             Producto.correo:producto_request.correo,
-                             Producto.telefono:producto_request.telefono,
+                             Producto.id_compania_mass:producto_request.id_compania_mass,
+                             Producto.id_plan_mass:producto_request.id_plan_mass,
+                             Producto.nombre:producto_request.nombre,
+                             Producto.precio:producto_request.precio,
                              Producto.comision_porcentaje:producto_request.comision_porcentaje,
                              Producto.comision_fija:producto_request.comision_fija,
-                             Producto.tipo_pago:producto_request.tipo_pago,
-                             Producto.dia_maximo_pago_reclamo:producto_request.dia_maximo_pago_reclamo,
-                             Producto.dia_pago:producto_request.dia_pago,
-                             Producto.fecha_corte:producto_request.fecha_corte,
-                             Producto.banco_nombre:producto_request.banco_nombre,
-                             Producto.banco_numero_cuenta:producto_request.banco_numero_cuenta,
-                             Producto.banco_clabe_bancaria:producto_request.banco_clabe_bancaria,
-                             Producto.banco_codigo_swift:producto_request.banco_codigo_swift,
-                             Producto.banco_codigo_iban:producto_request.banco_codigo_iban,
-                             Producto.banco_codigo_bic:producto_request.banco_codigo_bic,
-                             Producto.banco_domicilio:producto_request.banco_domicilio,
-                             Producto.tipo_moneda:producto_request.tipo_moneda,
-                             Producto.contraseña:producto_request.contraseña,
-                             Producto.direccion:producto_request.direccion,
+                             Producto.limite_superior:producto_request.limite_superior,
+                             Producto.limite_inferior:producto_request.limite_inferior,
                              Producto.estatus:producto_request.estatus
                              }).where(Producto.id == producto_request.id)
         qry.execute()

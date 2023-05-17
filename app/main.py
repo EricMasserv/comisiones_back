@@ -6,6 +6,12 @@ from .Models.Agente import Agente
 from .Models.Validador import Validador
 from .Models.Expediente import Expediente
 from .Models.Producto import Producto
+from .Models.Tipo_archivo import Tipo_archivo
+from .Models.Venta import Venta
+from .Models.Regimenes_fiscales import Regimenes_fiscales
+from .Models.Boveda import Boveda
+from .Models.Centro_costo import Centro_costo
+from .Models.Codigo_confirmacion import Codigo_confirmacion
 from .Database.database import database as connection
 
 from fastapi.middleware.cors import CORSMiddleware
@@ -15,6 +21,12 @@ from .routers import agente
 from .routers import validador
 from .routers import expediente
 from .routers import producto
+from .routers import tipo_archivo
+from .routers import venta
+from .routers import regimenes_fiscales
+from .routers import boveda
+from .routers import centro_costo
+from .routers import codigo_confirmacion
 
 app = FastAPI (title =  'Comisiones Escalonadas',
                descripcion = 'comisiones escalonadas con python',
@@ -39,12 +51,18 @@ app.include_router(agente.agente_router)
 app.include_router(validador.validador_router)
 app.include_router(expediente.expediente_router)
 app.include_router(producto.producto_router)
+app.include_router(tipo_archivo.tipo_archivo_router)
+app.include_router(venta.venta_router)
+app.include_router(regimenes_fiscales.regimenes_fiscales)
+app.include_router(boveda.boveda)
+app.include_router(centro_costo.centro_costo)
+app.include_router(codigo_confirmacion.codigo_confirmacion)
 
 @app.on_event('startup')
 def startup():
     if connection.is_closed():
         connection.connect()  
-        connection.create_tables([Company, Division, Agente, Validador, Expediente, Producto])
+        connection.create_tables([Company, Division, Agente, Validador, Expediente, Producto, Tipo_archivo, Venta, Regimenes_fiscales, Centro_costo, Codigo_confirmacion])
 
 @app.on_event('shutdown')
 def shutdown():

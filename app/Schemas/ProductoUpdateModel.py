@@ -4,7 +4,7 @@ from pydantic import BaseModel, EmailStr
 class ProductoUpdateRequestModel(BaseModel):
     id_compania:int
     id_compania_mass:int
-    id_plam_mass:int
+    id_plan_mass:int
     nombre:str
     precio:int
     comision_porcentaje:int
