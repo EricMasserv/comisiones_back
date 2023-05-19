@@ -24,7 +24,7 @@ class AgenteUpdateRequestModel(BaseModel):
     banco_codigo_bic:int
     banco_domicilio:str
     tipo_moneda:str
-    contraseña:str
+    contrasena:str
     estatus:int
     id:int
 

@@ -24,7 +24,7 @@ class CompanyUpdateRequestModel(BaseModel):
     banco_codigo_bic:int
     banco_domicilio:str
     tipo_moneda:int
-    contraseña:str
+    contrasena:str
     direccion_legal:str
     direccion_comercial:str
     id:int

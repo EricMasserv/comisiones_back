@@ -1,8 +1,12 @@
 from fastapi import APIRouter
 from fastapi import HTTPException
 from ..Models.Division import Division
+from ..Models.Usuario import Usuario
+from passlib.context import CryptContext
 from ..Schemas.DivisionCreateModel import DivisionCreateRequestModel, DivisionResponseModel
 from ..Schemas.DivisionUpdateModel import DivisionUpdateRequestModel, DivisionUpdateResponseModel
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 division_router = APIRouter(
     prefix = "/division",
@@ -11,6 +15,14 @@ division_router = APIRouter(
 
 @division_router.post('/create')
 async def create_division(division_request: DivisionCreateRequestModel):
+    usuario = Usuario.create(
+        correo=division_request.correo,
+        contrasena=pwd_context.hash(division_request.contrasena),
+        tipo='division'        
+    )
+    
+    id_usuario = Usuario.select(Usuario.id).where(Usuario.correo == division_request.correo).dicts()[0]
+    
     division = Division.create(
         id_compania=division_request.id_compania,
         nombre_division=division_request.nombre_division,
@@ -32,9 +44,10 @@ async def create_division(division_request: DivisionCreateRequestModel):
         banco_codigo_bic=division_request.banco_codigo_bic,
         banco_domicilio=division_request.banco_domicilio,
         tipo_moneda=division_request.tipo_moneda,
-        contraseña=division_request.contraseña,
+        contrasena=pwd_context.hash(division_request.contrasena),
         direccion=division_request.direccion,
-        estatus=division_request.estatus
+        estatus=division_request.estatus,
+        id_usuario=id_usuario['id']
     )
     
     return division_request
@@ -64,7 +77,7 @@ async def get_division(division_id):
                                     banco_codigo_bic=division.banco_codigo_bic,
                                     banco_domicilio=division.banco_domicilio,
                                     tipo_moneda=division.tipo_moneda,
-                                    contraseña=division.contraseña,
+                                    contrasena=division.contrasena,
                                     direccion=division.direccion,
                                     estatus=division.estatus
                                  )
@@ -74,17 +87,18 @@ async def get_division(division_id):
 @division_router.get('/delete/{division_id}')
 async def delete_division(division_id):
     division = Division.select().where(Division.id == division_id).first()
+    usuario = Usuario.select().where(Usuario.correo == division.correo).first()
     if  division:
         division.delete_instance()
+        usuario.delete_instance()
         return {'Division eliminada'}
     else:
         return HTTPException(404, 'Division not found')
     
 @division_router.post('/update/')
 async def update_division(division_request: DivisionUpdateRequestModel):
-    division = Division.select().where(Division.id == division_request.id).first()
-    if division:     
-               
+    division = Division.select(Division.correo).where(Division.id == division_request.id).dicts()[0]
+    if division:              
         qry=Division.update({Division.id_compania:division_request.id_compania,
                              Division.nombre_division:division_request.nombre_division,
                              Division.regimen_fiscal_id:division_request.regimen_fiscal_id,
@@ -105,11 +119,15 @@ async def update_division(division_request: DivisionUpdateRequestModel):
                              Division.banco_codigo_bic:division_request.banco_codigo_bic,
                              Division.banco_domicilio:division_request.banco_domicilio,
                              Division.tipo_moneda:division_request.tipo_moneda,
-                             Division.contraseña:division_request.contraseña,
+                             Division.contrasena:pwd_context.hash(division_request.contrasena),
                              Division.direccion:division_request.direccion,
                              Division.estatus:division_request.estatus
                              }).where(Division.id == division_request.id)
         qry.execute()
+        qryUser=Usuario.update({Usuario.correo:division_request.correo,
+                                Usuario.contrasena:pwd_context.hash(division_request.contrasena),
+                             }).where(Usuario.correo == division['correo'])
+        qryUser.execute()
                    
         return {'Division actualizada'}
     else:

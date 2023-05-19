@@ -22,7 +22,7 @@ class DivisionCreateRequestModel(BaseModel):
     banco_codigo_bic:int
     banco_domicilio:str
     tipo_moneda:str
-    contraseña:str
+    contrasena:str
     direccion:str
     estatus:int
     

@@ -2,7 +2,7 @@ from ..Database.database import database
 from peewee import *
 from datetime import datetime
 
-class Company(Model):
+class Compania(Model):
     nombre_legal = CharField(max_length=255,null=True)
     nombre_compania = CharField(max_length=255,null=True)
     regimen_fiscal_id = BigIntegerField(null=True)
@@ -25,9 +25,10 @@ class Company(Model):
     banco_codigo_bic = CharField(max_length=255,null=True)
     banco_domicilio = CharField(max_length=255,null=True)
     tipo_moneda = CharField(max_length=255,null=True)
-    contraseña = CharField(max_length=255,null=True)
+    contrasena = CharField(max_length=255,null=True)
     direccion_legal = CharField(max_length=255,null=True)
     direccion_comercial = CharField(max_length=255,null=True)
+    id_usuario = IntegerField(null=True)
     remember_token = CharField(max_length=255,null=True)
     created_at = DateTimeField(default=datetime.now)
     updated_at = DateTimeField(default=datetime.now)

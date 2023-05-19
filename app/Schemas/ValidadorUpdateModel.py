@@ -4,7 +4,7 @@ from pydantic import BaseModel, EmailStr
 class ValidadorUpdateRequestModel(BaseModel):
     nombre_completo:str
     correo:str
-    contraseña:str
+    contrasena:str
     estatus:int
     
     id:int

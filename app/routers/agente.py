@@ -1,8 +1,12 @@
 from fastapi import APIRouter
 from fastapi import HTTPException
 from ..Models.Agente import Agente
+from ..Models.Usuario import Usuario
+from passlib.context import CryptContext
 from ..Schemas.AgenteCreateModel import AgenteCreateRequestModel, AgenteResponseModel
 from ..Schemas.AgenteUpdateModel import AgenteUpdateRequestModel, AgenteUpdateResponseModel
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 agente_router = APIRouter(
     prefix = "/agente",
@@ -11,6 +15,14 @@ agente_router = APIRouter(
 
 @agente_router.post('/create')
 async def create_agente(agente_request: AgenteCreateRequestModel):
+    usuario = Usuario.create(
+        correo=agente_request.correo,
+        contrasena=pwd_context.hash(agente_request.contrasena),
+        tipo='agente'        
+    )
+    
+    id_usuario = Usuario.select(Usuario.id).where(Usuario.correo == agente_request.correo).dicts()[0]
+    
     agente = Agente.create(
         id_compania=agente_request.id_compania,
         id_division=agente_request.id_division,
@@ -33,9 +45,10 @@ async def create_agente(agente_request: AgenteCreateRequestModel):
         banco_codigo_bic=agente_request.banco_codigo_bic,
         banco_domicilio=agente_request.banco_domicilio,
         tipo_moneda=agente_request.tipo_moneda,
-        contraseña=agente_request.contraseña,
+        contrasena=pwd_context.hash(agente_request.contrasena),
         direccion=agente_request.direccion,
-        estatus=agente_request.estatus
+        estatus=agente_request.estatus,
+        id_usuario=id_usuario['id']
     )
     
     return agente_request
@@ -66,7 +79,7 @@ async def get_agente(agente_id):
                                    banco_codigo_bic=agente.banco_codigo_bic,
                                    banco_domicilio=agente.banco_domicilio,
                                    tipo_moneda=agente.tipo_moneda,
-                                   contraseña=agente.contraseña,
+                                   contrasena=agente.contrasena,
                                    direccion=agente.direccion,
                                    estatus=agente.estatus
                                  )
@@ -76,17 +89,18 @@ async def get_agente(agente_id):
 @agente_router.get('/delete/{user_id}')
 async def delete_agente(user_id):
     agente = Agente.select().where(Agente.id == user_id).first()
+    usuario = Usuario.select().where(Usuario.correo == agente.correo).first()
     if  agente:
         agente.delete_instance()
+        usuario.delete_instance()
         return {'Agente eliminado'}
     else:
         return HTTPException(404, 'Agente not found')
     
 @agente_router.post('/update/')
 async def update_agente(agente_request: AgenteUpdateRequestModel):
-    agente = Agente.select().where(Agente.id == Agente.id).first()
-    if agente:     
-               
+    agente = Agente.select(Agente.correo).where(Agente.id == agente_request.id).dicts()[0]
+    if agente:           
         qry=Agente.update({Agente.id_compania:agente_request.id_compania,
                            Agente.id_division:agente_request.id_division,
                            Agente.nombre_completo:agente_request.nombre_completo,
@@ -108,11 +122,16 @@ async def update_agente(agente_request: AgenteUpdateRequestModel):
                            Agente.banco_codigo_bic:agente_request.banco_codigo_bic,
                            Agente.banco_domicilio:agente_request.banco_domicilio,
                            Agente.tipo_moneda:agente_request.tipo_moneda,
-                           Agente.contraseña:agente_request.contraseña,
+                           Agente.contrasena:pwd_context.hash(agente_request.contrasena),
                            Agente.direccion:agente_request.direccion,
                            Agente.estatus:agente_request.estatus
                              }).where(Agente.id == agente_request.id)
         qry.execute()
+        
+        qryUser=Usuario.update({Usuario.correo:agente_request.correo,
+                                Usuario.contrasena:pwd_context.hash(agente_request.contrasena),
+                             }).where(Usuario.correo == agente['correo'])
+        qryUser.execute()
                    
         return {'Agente actualizado'}
     else:
