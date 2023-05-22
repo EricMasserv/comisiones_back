@@ -1,12 +1,14 @@
 from fastapi import APIRouter
 from fastapi import HTTPException
 from ..Models.Tipo_archivo import Tipo_archivo
-from ..Schemas.Tipo_archivoCreateModel import TipoArchivoCreateRequestModel, TipoArchivoResponseModel
-from ..Schemas.Tipo_archivoUpdateModel import TipoArchivoUpdateRequestModel, TipoArchivoUpdateResponseModel
+from ..Schemas.Tipo_archivo.Tipo_archivoCreateModel import TipoArchivoCreateRequestModel, TipoArchivoResponseModel
+from ..Schemas.Tipo_archivo.Tipo_archivoUpdateModel import TipoArchivoUpdateRequestModel, TipoArchivoUpdateResponseModel
+from ..Middlewares.verify_token_route import VerifyTokenRoute
 
 tipo_archivo_router = APIRouter(
     prefix = "/tipo_archivo",
-    tags = ["Tipo_archivo"]
+    tags = ["Tipo_archivo"],
+    route_class=VerifyTokenRoute
 )
 
 @tipo_archivo_router.post('/create')

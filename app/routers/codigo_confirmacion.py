@@ -1,12 +1,14 @@
 from fastapi import APIRouter
 from fastapi import HTTPException
 from ..Models.Codigo_confirmacion import Codigo_confirmacion
-from ..Schemas.Codigo_confirmacionCreateModel import Codigo_confirmacionCreateRequestModel, Codigo_confirmacionCreateResponseModel
-from ..Schemas.Codigo_confirmacionUpdateModel import Codigo_confirmacionUpdateRequestModel, Codigo_confirmacionUpdateResponseModel
+from ..Schemas.Codigo_confirmacion.Codigo_confirmacionCreateModel import Codigo_confirmacionCreateRequestModel, Codigo_confirmacionCreateResponseModel
+from ..Schemas.Codigo_confirmacion.Codigo_confirmacionUpdateModel import Codigo_confirmacionUpdateRequestModel, Codigo_confirmacionUpdateResponseModel
+from ..Middlewares.verify_token_route import VerifyTokenRoute
 
 codigo_confirmacion = APIRouter(
     prefix = "/codigo_confirmacion",
-    tags = ["Codigo_confirmacion"]
+    tags = ["Codigo_confirmacion"],
+    route_class=VerifyTokenRoute
 )
 
 @codigo_confirmacion.post('/create')

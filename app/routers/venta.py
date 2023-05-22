@@ -1,12 +1,14 @@
 from fastapi import APIRouter
 from fastapi import HTTPException
 from ..Models.Venta import Venta
-from ..Schemas.VentaCreateModel import VentaCreateRequestModel, VentaResponseModel
-from ..Schemas.VentaUpdateModel import VentaUpdateRequestModel, VentaUpdateResponseModel
+from ..Schemas.Venta.VentaCreateModel import VentaCreateRequestModel, VentaResponseModel
+from ..Schemas.Venta.VentaUpdateModel import VentaUpdateRequestModel, VentaUpdateResponseModel
+from ..Middlewares.verify_token_route import VerifyTokenRoute
 
 venta_router = APIRouter(
     prefix = "/venta",
-    tags = ["Venta"]
+    tags = ["Venta"],
+    route_class=VerifyTokenRoute
 )
 
 @venta_router.post('/create')

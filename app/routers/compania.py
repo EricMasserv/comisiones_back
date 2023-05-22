@@ -2,22 +2,17 @@ from fastapi import APIRouter, HTTPException, Depends
 from ..Models.Compania import Compania
 from ..Models.Usuario import Usuario
 from passlib.context import CryptContext
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from ..Schemas.CompaniaCreateModel import CompanyCreateRequestModel, CompanyResponseModel
-from ..Schemas.CompaniaUpdateModel import CompanyUpdateRequestModel, CompanyUpdateResponseModel
+from ..Schemas.Compania.CompaniaCreateModel import CompanyCreateRequestModel, CompanyResponseModel
+from ..Schemas.Compania.CompaniaUpdateModel import CompanyUpdateRequestModel, CompanyUpdateResponseModel
+from ..Middlewares.verify_token_route import VerifyTokenRoute
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 compania_router = APIRouter(
     prefix = "/compania",
-    tags = ["Company"]
+    tags = ["Company"],
+    route_class=VerifyTokenRoute
 )
-
-oauth2_scheme = OAuth2PasswordBearer("/token")
-
-@compania_router.get('/prueba')
-async def prueba(token:str = Depends(oauth2_scheme)):
-    return 'holi'
 
 @compania_router.post('/create')
 async def create_company(company_request: CompanyCreateRequestModel):

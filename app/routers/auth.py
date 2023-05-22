@@ -1,41 +1,18 @@
-from fastapi import APIRouter
-from fastapi import HTTPException
+from fastapi import APIRouter, HTTPException
 from passlib.context import CryptContext
 from ..Models.Usuario import Usuario
-from ..Schemas.UsuarioRegistrarModel import UsuarioRegistrarRequestModel, UsuarioResponseModel
-from ..Schemas.UsuarioUpdateModel import UsuarioUpdateRequestModel, UsuarioUpdateResponseModel
-from ..Schemas.UsuarioLoginRequest import UsuarioLoginRequest, UsuarioLoginResponse
+from ..Schemas.Usuario.UsuarioRegistrarModel import UsuarioRegistrarRequestModel, UsuarioResponseModel
+from ..Schemas.Usuario.UsuarioUpdateModel import UsuarioUpdateRequestModel, UsuarioUpdateResponseModel
+from ..Middlewares.verify_token_route import VerifyTokenRoute
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 usuario = APIRouter(
     prefix = "/usuario",
-    tags = ["Usuario"]
+    tags = ["Usuario"],
+    route_class=VerifyTokenRoute
 )
 
-@usuario.post('/login')
-async def login(login_request: UsuarioLoginRequest):
-    usuario = Usuario.select().where(Usuario.correo == login_request.correo).dicts()[0]
-    
-    if usuario:
-        if pwd_context.verify(login_request.contrasena, usuario['contrasena']):
-            
-          datos = UsuarioLoginResponse(id=usuario['id'],
-                                    correo = usuario['correo'],
-                                    contrasena = usuario['contrasena'],
-                                    tipo = usuario['tipo'],
-                                )
-          return {
-            "datos": datos,
-            "acceso": True,
-            "perfil":usuario['tipo']
-        }
-          
-        else:
-          return 'Las credenciales no coinciden'  
-    else:
-        return 'No existe' 
-    
 @usuario.post('/registrar')
 async def registrar_usuario(usuario_request: UsuarioRegistrarRequestModel):
     usuario = Usuario.create(

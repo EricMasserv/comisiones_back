@@ -1,12 +1,14 @@
 from fastapi import APIRouter
 from fastapi import HTTPException
 from ..Models.Expediente import Expediente
-from ..Schemas.ExpedienteCreateModel import ExpedienteCreateRequestModel, ExpedienteResponseModel
-from ..Schemas.ExpedienteUpdateModel import ExpedienteUpdateRequestModel, ExpedienteUpdateResponseModel
+from ..Schemas.Expediente.ExpedienteCreateModel import ExpedienteCreateRequestModel, ExpedienteResponseModel
+from ..Schemas.Expediente.ExpedienteUpdateModel import ExpedienteUpdateRequestModel, ExpedienteUpdateResponseModel
+from ..Middlewares.verify_token_route import VerifyTokenRoute
 
 expediente_router = APIRouter(
     prefix = "/expediente",
-    tags = ["Expediente"]
+    tags = ["Expediente"],
+    route_class=VerifyTokenRoute
 )
 
 @expediente_router.post('/create')

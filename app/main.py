@@ -29,6 +29,7 @@ from .routers import boveda
 from .routers import centro_costo
 from .routers import codigo_confirmacion
 from .routers import auth
+from .routers import login
 
 app = FastAPI (title =  'Comisiones Escalonadas',
                descripcion = 'comisiones escalonadas con python',
@@ -60,6 +61,7 @@ app.include_router(boveda.boveda)
 app.include_router(centro_costo.centro_costo)
 app.include_router(codigo_confirmacion.codigo_confirmacion)
 app.include_router(auth.usuario)
+app.include_router(login.login)
 
 @app.on_event('startup')
 def startup():

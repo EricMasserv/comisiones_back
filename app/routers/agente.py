@@ -3,14 +3,16 @@ from fastapi import HTTPException
 from ..Models.Agente import Agente
 from ..Models.Usuario import Usuario
 from passlib.context import CryptContext
-from ..Schemas.AgenteCreateModel import AgenteCreateRequestModel, AgenteResponseModel
-from ..Schemas.AgenteUpdateModel import AgenteUpdateRequestModel, AgenteUpdateResponseModel
+from ..Schemas.Agente.AgenteCreateModel import AgenteCreateRequestModel, AgenteResponseModel
+from ..Schemas.Agente.AgenteUpdateModel import AgenteUpdateRequestModel, AgenteUpdateResponseModel
+from ..Middlewares.verify_token_route import VerifyTokenRoute
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 agente_router = APIRouter(
     prefix = "/agente",
-    tags = ["Agente"]
+    tags = ["Agente"],
+    route_class=VerifyTokenRoute
 )
 
 @agente_router.post('/create')

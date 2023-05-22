@@ -1,12 +1,14 @@
 from fastapi import APIRouter
 from fastapi import HTTPException
 from ..Models.Regimenes_fiscales import Regimenes_fiscales
-from ..Schemas.Regimenes_fiscalesCreateModel import Regimenes_fiscalesCreateRequestModel, Regimenes_fiscalesResponseModel
-from ..Schemas.Regimenes_fiscalesUpdateModel import Regimenes_fiscalesUpdateRequestModel, Regimenes_fiscalesUpdateResponseModel
+from ..Schemas.Regimen_fiscal.Regimenes_fiscalesCreateModel import Regimenes_fiscalesCreateRequestModel, Regimenes_fiscalesResponseModel
+from ..Schemas.Regimen_fiscal.Regimenes_fiscalesUpdateModel import Regimenes_fiscalesUpdateRequestModel, Regimenes_fiscalesUpdateResponseModel
+from ..Middlewares.verify_token_route import VerifyTokenRoute
 
 regimenes_fiscales = APIRouter(
     prefix = "/regimenes_fiscales",
-    tags = ["Regimenes_fiscales"]
+    tags = ["Regimenes_fiscales"],
+    route_class=VerifyTokenRoute
 )
 
 @regimenes_fiscales.post('/create')

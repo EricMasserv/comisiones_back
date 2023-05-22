@@ -3,14 +3,16 @@ from fastapi import HTTPException
 from ..Models.Division import Division
 from ..Models.Usuario import Usuario
 from passlib.context import CryptContext
-from ..Schemas.DivisionCreateModel import DivisionCreateRequestModel, DivisionResponseModel
-from ..Schemas.DivisionUpdateModel import DivisionUpdateRequestModel, DivisionUpdateResponseModel
+from ..Schemas.Division.DivisionCreateModel import DivisionCreateRequestModel, DivisionResponseModel
+from ..Schemas.Division.DivisionUpdateModel import DivisionUpdateRequestModel, DivisionUpdateResponseModel
+from ..Middlewares.verify_token_route import VerifyTokenRoute
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 division_router = APIRouter(
     prefix = "/division",
-    tags = ["Division"]
+    tags = ["Division"],
+    route_class=VerifyTokenRoute
 )
 
 @division_router.post('/create')

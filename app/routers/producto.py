@@ -1,12 +1,14 @@
 from fastapi import APIRouter
 from fastapi import HTTPException
 from ..Models.Producto import Producto
-from ..Schemas.ProductoCreateModel import ProductoCreateRequestModel, ProductoResponseModel
-from ..Schemas.ProductoUpdateModel import ProductoUpdateRequestModel, ProductoUpdateResponseModel
+from ..Schemas.Producto.ProductoCreateModel import ProductoCreateRequestModel, ProductoResponseModel
+from ..Schemas.Producto.ProductoUpdateModel import ProductoUpdateRequestModel, ProductoUpdateResponseModel
+from ..Middlewares.verify_token_route import VerifyTokenRoute
 
 producto_router = APIRouter(
     prefix = "/producto",
-    tags = ["Producto"]
+    tags = ["Producto"],
+    route_class=VerifyTokenRoute
 )
 
 @producto_router.post('/create')

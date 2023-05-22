@@ -1,12 +1,14 @@
 from fastapi import APIRouter
 from fastapi import HTTPException
 from ..Models.Centro_costo import Centro_costo
-from ..Schemas.Centro_costoCreateModel import Centro_costoCreateRequestModel, Centro_costoResponseModel
-from ..Schemas.Centro_costoUpdateModel import Centro_costoUpdateRequestModel, Centro_costoUpdateResponseModel
+from ..Schemas.Centro_costo.Centro_costoCreateModel import Centro_costoCreateRequestModel, Centro_costoResponseModel
+from ..Schemas.Centro_costo.Centro_costoUpdateModel import Centro_costoUpdateRequestModel, Centro_costoUpdateResponseModel
+from ..Middlewares.verify_token_route import VerifyTokenRoute
 
 centro_costo = APIRouter(
     prefix = "/centro_costo",
-    tags = ["Centro_costo"]
+    tags = ["Centro_costo"],
+    route_class=VerifyTokenRoute
 )
 
 @centro_costo.post('/create')

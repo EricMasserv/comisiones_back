@@ -3,14 +3,16 @@ from fastapi import HTTPException
 from ..Models.Validador import Validador
 from ..Models.Usuario import Usuario
 from passlib.context import CryptContext
-from ..Schemas.ValidadorCreateModel import ValidadorCreateRequestModel, ValidadorResponseModel
-from ..Schemas.ValidadorUpdateModel import ValidadorUpdateRequestModel, ValidadorUpdateResponseModel
+from ..Schemas.Validador.ValidadorCreateModel import ValidadorCreateRequestModel, ValidadorResponseModel
+from ..Schemas.Validador.ValidadorUpdateModel import ValidadorUpdateRequestModel, ValidadorUpdateResponseModel
+from ..Middlewares.verify_token_route import VerifyTokenRoute
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 validador_router = APIRouter(
     prefix = "/validador",
-    tags = ["Validador"]
+    tags = ["Validador"],
+    route_class=VerifyTokenRoute
 )
 
 @validador_router.post('/create')

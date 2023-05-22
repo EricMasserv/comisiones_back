@@ -1,12 +1,14 @@
 from fastapi import APIRouter
 from fastapi import HTTPException
 from ..Models.Boveda import Boveda
-from ..Schemas.BovedaCreateModel import BovedaCreateRequestModel, BovedaResponseModel
-from ..Schemas.BovedaUpdateModel import BovedaUpdateRequestModel, BovedaUpdateResponseModel
+from ..Schemas.Boveda.BovedaCreateModel import BovedaCreateRequestModel, BovedaResponseModel
+from ..Schemas.Boveda.BovedaUpdateModel import BovedaUpdateRequestModel, BovedaUpdateResponseModel
+from ..Middlewares.verify_token_route import VerifyTokenRoute
 
 boveda = APIRouter(
     prefix = "/boveda",
-    tags = ["Boveda"]
+    tags = ["Boveda"],
+    route_class=VerifyTokenRoute
 )
 
 @boveda.post('/create')
