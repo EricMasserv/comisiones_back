@@ -3,6 +3,7 @@ from pydantic import BaseModel, EmailStr
 
 class UsuarioUpdateRequestModel(BaseModel):
     correo:str
+    nombre_usuario:str
     contrasena:str
     tipo:str  
     id:int

@@ -13,23 +13,24 @@ from .Models.Boveda import Boveda
 from .Models.Centro_costo import Centro_costo
 from .Models.Codigo_confirmacion import Codigo_confirmacion
 from .Models.Usuario import Usuario
+from .Models.Estatus_registro import Estatus_registro
 from .Database.database import database as connection
 
 from fastapi.middleware.cors import CORSMiddleware
-from .routers import compania
-from .routers import division
-from .routers import agente
-from .routers import validador
-from .routers import expediente
-from .routers import producto
-from .routers import tipo_archivo
-from .routers import venta
-from .routers import regimenes_fiscales
-from .routers import boveda
-from .routers import centro_costo
-from .routers import codigo_confirmacion
-from .routers import auth
-from .routers import login
+from .routers.Compania import compania
+from .routers.Division import division
+from .routers.Agente import agente
+from .routers.Validador import validador
+from .routers.Expediente import expediente
+from .routers.Producto import producto
+from .routers.Tipo_archivo import tipo_archivo
+from .routers.Venta import venta
+from .routers.Regimenes_fiscales import regimenes_fiscales
+from .routers.Boveda import boveda
+from .routers.Centro_costo import centro_costo
+from .routers.Codigo_confirmacion import codigo_confirmacion
+from .routers.Auth import auth
+from .routers.Auth import login
 
 app = FastAPI (title =  'Comisiones Escalonadas',
                descripcion = 'comisiones escalonadas con python',
@@ -67,8 +68,14 @@ app.include_router(login.login)
 def startup():
     if connection.is_closed():
         connection.connect()  
-        connection.create_tables([Compania, Division, Agente, Validador, Expediente, Producto, Tipo_archivo, Venta, Regimenes_fiscales, Boveda, Centro_costo, Codigo_confirmacion, Usuario])
-
+        connection.create_tables([Compania, Division, Agente, Validador, Expediente, Producto, Tipo_archivo, Venta, Regimenes_fiscales, Boveda, Centro_costo, Codigo_confirmacion, Estatus_registro, Usuario])
+        
+        catalogo_estatus_usuario = Estatus_registro.select()
+        if not catalogo_estatus_usuario:       
+            estatus = ['documentos','contrato','validacion','success']
+            row_dicts = ({'estatus': username} for username in estatus)
+            Estatus_registro.insert_many(row_dicts).execute()
+              
 @app.on_event('shutdown')
 def shutdown():
     if not connection.is_closed():
